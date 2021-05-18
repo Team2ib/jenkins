@@ -1,0 +1,21 @@
+---
+version: '2'
+services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config:/var/jenkins_home
+      - /usr/bin/docker:/usr/bin/docker
+    restart: unless-stopped
+    healthcheck:
+      test: curl -fs http://localhost:8080/login?from=%2F || exit 1
+      timeout: 30s
+      interval: 1m
+      retries: 3
+...
